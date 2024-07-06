@@ -1,3 +1,7 @@
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -8,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-o*e6e!r1=-4-ll_rz+zdko*gne3b@l$v(ags=5t7j1#)c3#0a@'
+SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -29,10 +33,12 @@ INSTALLED_APPS = [
     # 3ds Party
     'rest_framework',
     'rest_framework_simplejwt',
+    'django_filters',
 
     # MyApps
     'core',
     'core.user',
+    'core.auth',
 ]
 
 MIDDLEWARE = [
@@ -72,9 +78,9 @@ WSGI_APPLICATION = 'CoreRoot.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'coredb',
-        'USER': 'blog',
-        'PASSWORD': 'blog123',
+        'NAME': str(os.getenv('DB_NAME')),
+        'USER': str(os.getenv('DB_USER')),
+        'PASSWORD': str(os.getenv('DB_PASSWORD')),
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
@@ -105,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -130,4 +136,16 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 3
+
 }
+
+
+#Конфигурация сервера почты Gmail.
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = str(os.getenv('EMAIL_HOST_USER'))
+EMAIL_HOST_PASSWORD = str(os.getenv('EMAIL_HOST_PASSWORD'))
