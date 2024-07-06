@@ -7,9 +7,9 @@ from django.http import Http404
 
 
 class UserManager(BaseUserManager):
-    def get_object_by_public_id(self, pubclic_id):
+    def get_object_by_public_id(self, public_id):
         try:
-            instance = self.get(pubclic_id=pubclic_id)
+            instance = self.get(public_id=public_id)
             return instance
         except (ObjectDoesNotExist, ValueError, TypeError):
             raise Http404("User not found")
